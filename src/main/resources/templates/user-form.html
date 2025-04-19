@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Formulaire Utilisateur</title></head>
+<body>
+<h1 th:text="${user.id == null} ? 'Créer un utilisateur' : 'Modifier l\'utilisateur'"></h1>
+<form th:action="@{/users/save}" th:object="${user}" method="post">
+<input type="text" th:field="*{username}" placeholder="Nom d'utilisateur" required/>
+<input type="email" th:field="*{email}" placeholder="Email" required/>
+<input type="password" th:field="*{password}" placeholder="Mot de passe" required/>
+<select th:field="*{role}" required>
+<option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+</select>
+<button type="submit">Enregistrer</button>
+</form>
+<a href="/users">Retour</a>
+</body>
+</html>
