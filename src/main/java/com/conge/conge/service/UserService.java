@@ -21,4 +21,8 @@ public class UserService {
     public User findById(Long id) { return userRepository.findById(id).orElse(null); }
     public void save(com.conge.conge.model.User user) { userRepository.save(user); }
     public void delete(Long id) { userRepository.deleteById(id); }
+
+    public User findByEmailAndPassword(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password);
+    }
 }

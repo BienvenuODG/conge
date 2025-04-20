@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.conge.conge.model.User;
 import com.conge.conge.repository.RoleRepository;
@@ -28,6 +29,7 @@ public class UserController {
     @GetMapping("/list")
     public String listUsers(Model model) {
         model.addAttribute("users", userService.findAll());
+        model.addAttribute("user", new User());
         return "user-list";
     }
 
@@ -50,11 +52,38 @@ public class UserController {
         model.addAttribute("roles", roleRepository.findAll());
         return "user-form";
     }
+    @GetMapping("/modifier/{id}")
+    public String modifierUser(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("roles", roleRepository.findAll());
+        return "modifier_utilisateur";
+    }
 
     @GetMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return "redirect:/users/list";
+    }
+
+    private final UserService userService2;
+    //lien de page html connexion
+    @GetMapping("/login")
+    public String showLoginForm(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("roles", roleRepository.findAll());
+        return "connexion";
+    }
+    // connexion utilisateur
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+        User user = userService2.findByEmailAndPassword(email, password);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "redirect:/users/list"; // la vue profile.html
+        } else {
+            model.addAttribute("error", "Identifiants incorrects !");
+            return "connexion";
+        }
     }
 }
 

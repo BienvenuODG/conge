@@ -10,17 +10,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-
 @Entity
 @Data
-@Table(name="users")
-public class User {
+@Table(name="demandes")
+public class Demande {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "username")
+    @Column(name = "type")
     private String username;
-    @Column(name = "password")
+    @Column(name = "motif")
     private String password;
     @Column(name = "email")
     private String email;
@@ -28,8 +27,6 @@ public class User {
     private boolean enabled;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
-   // getters/setters
-
+    @JoinColumn(name = "user_id")
+    private User user;
 }
