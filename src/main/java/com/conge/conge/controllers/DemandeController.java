@@ -1,49 +1,50 @@
 package com.conge.conge.controllers;
 
 import com.conge.conge.model.Demande;
-import com.conge.conge.repository.DemandeRepository;
+import com.conge.conge.service.DemandeService;
+
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/demande")
-@CrossOrigin(origins = "*") // autoriser les requêtes CORS depuis n'importe quelle origine (Flutter, etc.)
+@CrossOrigin(origins = "*")
 public class DemandeController {
 
-    private final DemandeRepository demandeRepository;
+    private final DemandeService demandeService;
 
     @Autowired
-    public DemandeController(DemandeRepository demandeRepository) {
-        this.demandeRepository = demandeRepository;
+    public DemandeController(DemandeService demandeService) {
+        this.demandeService = demandeService;
     }
 
+    // ✅ Pour l'enregistrement depuis Flutter
     @PostMapping("/enregistrer")
     public ResponseEntity<Demande> enregistrerDemande(@RequestBody Demande demande) {
         System.out.println("✅ Demande reçue depuis Flutter : " + demande);
-
-        demande.setApprouve(false); // sécurité : ne jamais permettre au client de définir cet attribut
-
-        Demande savedDemande = demandeRepository.save(demande);
+        demande.setApprouve(false); // Sécurité
+        Demande savedDemande = demandeService.enregistrerDemande(demande);
         return new ResponseEntity<>(savedDemande, HttpStatus.CREATED);
     }
 
-    @GetMapping("/liste")
-    public String afficherDemandes(Model model) {
-        // Récupérer toutes les demandes depuis la base de données via le service
-        model.addAttribute("demande", demandeService.getAllDemandes());  // Changer "findAll()" par "getAllDemandes()"
-        return "demande_liste";  // Nom de la vue Thymeleaf
+    // ✅ Pour afficher toutes les demandes dans une vue web (Thymeleaf)
+    @GetMapping("/demande_list")
+    public String listDemandes(Model model) {
+        List<Demande> demandes = demandeService.getAllDemandes();
+        model.addAttribute("demandes", demandes); // à appeler "demandes" dans la vue
+        return "demande_liste"; // nom du fichier HTML (demande_liste.html)
     }
 
-    @PutMapping("/demande/approuver/{id}")
+    // ✅ Pour approuver une demande via la web app
+    @PutMapping("/approuver/{id}")
     public String approuverDemande(@PathVariable Long id) {
-        Demande demande = demandeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
-        demande.setApprouve(true);
-        demandeRepository.save(demande);
-        return "redirect:/demande/liste";  // Rediriger vers la liste après l'approbation
+        demandeService.approuverDemande(id);
+        return "redirect:/demande/demande_list";
     }
 }

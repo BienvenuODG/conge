@@ -1,7 +1,6 @@
 package com.conge.conge.service;
 
 import com.conge.conge.model.Demande;
-import com.conge.conge.model.User;
 import com.conge.conge.repository.DemandeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,20 +17,27 @@ public class DemandeService {
         this.demandeRepository = demandeRepository;
     }
 
-    // Liste des demandes
-    public List<Demande> findAll() { return demandeRepository.findAll(); }
+    // ✅ Liste toutes les demandes
+    public List<Demande> getAllDemandes() {
+        return demandeRepository.findAll();
+    }
 
-    // Enregistrer une nouvelle demande
+    // ✅ Trouver une demande par ID
+    public Demande findById(Long id) {
+        return demandeRepository.findById(id).orElse(null);
+    }
+
+    // ✅ Enregistrer une nouvelle demande
     public Demande enregistrerDemande(Demande demande) {
-        // Log pour s'assurer que la demande est bien reçue
-        System.out.println("Enregistrement de la demande: " + demande);
+        System.out.println("📥 Enregistrement de la demande: " + demande);
         return demandeRepository.save(demande);
     }
 
-    // Approuver une demande
+    // ✅ Approuver une demande
     public Demande approuverDemande(Long id) {
-        Demande demande = demandeRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Demande invalide"));
-        demande.setType("Approuvé");
+        Demande demande = demandeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Demande non trouvée"));
+        demande.setApprouve(true); // ✅ On approuve la demande ici
         return demandeRepository.save(demande);
     }
 }
