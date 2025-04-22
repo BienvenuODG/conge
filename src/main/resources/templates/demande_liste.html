@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des demandes de congé</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Liste des demandes de congé</h1>
+
+        <table class="table mt-3">
+            <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Motif</th>
+                    <th scope="col">Durée</th>
+                    <th scope="col">Date de début</th>
+                    <th scope="col">Date de fin</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="demande : ${demandes}">
+                    <td th:text="${demande.nom}">Nom</td>
+                    <td th:text="${demande.motif}">Motif</td>
+                    <td th:text="${demande.duree}">Durée</td>
+                    <td th:text="${demande.dateDebut}">Date de début</td>
+                    <td th:text="${demande.dateFin}">Date de fin</td>
+                    <td>
+                        <span th:text="${demande.approuve ? 'Approuvé' : 'En attente'}"
+                              th:classappend="${demande.approuve ? 'text-success' : 'text-warning'}"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{/demande/approuver/{id}(id=${demande.id})}" method="post">
+                            <button type="submit" th:disabled="${demande.approuve}" class="btn btn-success">
+                                Approuver
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

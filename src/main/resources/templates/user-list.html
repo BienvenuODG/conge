@@ -249,7 +249,10 @@ table.table .avatar {
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Accueil</a>
+                <a class="nav-link active" aria-current="page" th:href="@{/users/list}">Accueil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Les demandes</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" th:href="@{/users/add}">Ajouter</a>
@@ -326,7 +329,6 @@ table.table .avatar {
                     </tbody>
                 </table>
                 <div class="clearfix">
-                    <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                     <ul class="pagination">
                         <li class="page-item disabled"><a href="#">Previous</a></li>
                         

@@ -67,28 +67,28 @@ public class UserController {
 
     private final UserService userService2;
     //lien de page html connexion
-    @GetMapping("/connexion")
-    public String showLoginForm() {
-        return "user_connexion"; // correspond à templates/connexion.html
-    }
-
     // @GetMapping("/connexion")
-    // public String showLoginForm(@PathVariable Long id, Model model) {
-    //     model.addAttribute("user", userService.findById(id));
-    //     model.addAttribute("roles", roleRepository.findAll());
-    //     return "user_connexion";
+    // public String showLoginForm() {
+    //     return "user_connexion"; // correspond à templates/connexion.html
     // }
+
+    @GetMapping("/connexion")
+    public String showLoginForm(@PathVariable Long id, Model model) {
+        model.addAttribute("user", userService.findById(id));
+        model.addAttribute("roles", roleRepository.findAll());
+        return "user_connexion";
+    }
     // connexion utilisateur
-    // @PostMapping("/login")
-    // public String login(@RequestParam String email, @RequestParam String password, Model model) {
-    //     User user = userService2.findByEmailAndPassword(email, password);
-    //     if (user != null) {
-    //         model.addAttribute("user", user);
-    //         return "redirect:/users/list"; // la vue profile.html
-    //     } else {
-    //         model.addAttribute("error", "Identifiants incorrects !");
-    //         return "user_connexion";
-    //     }
-    // }
+    @PostMapping("/login")
+    public String login(@RequestParam String email, @RequestParam String password, Model model) {
+        User user = userService2.findByEmailAndPassword(email, password);
+        if (user != null) {
+            model.addAttribute("user", user);
+            return "redirect:/users/list"; // la vue profile.html
+        } else {
+            model.addAttribute("error", "Identifiants incorrects !");
+            return "user_connexion";
+        }
+    }
 }
 
