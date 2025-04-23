@@ -6,49 +6,81 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1 class="mt-5">Liste des demandes de congé</h1>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">GDD</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/users/list}">Accueil</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" th:href="@{/users/list}">Les utilisateurs</a>
+              </li>
+              
+            </ul>
+            <form class="d-flex" role="search" >
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+    </nav>
+<div class="container">
+    <h1 class="mt-5">Liste des demandes de congé</h1>
 
-        <table class="table mt-3">
-            <thead>
-                <tr>
-                    <th scope="col">Nom</th>
-                    <th scope="col">Motif</th>
-                    <th scope="col">Durée</th>
-                    <th scope="col">Date de début</th>
-                    <th scope="col">Date de fin</th>
-                    <th scope="col">Statut</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="demande : ${demandes}">
-                    <td th:text="${demande.nom}">Nom</td>
-                    <td th:text="${demande.motif}">Motif</td>
-                    <td th:text="${demande.duree}">Durée</td>
-                    <td th:text="${demande.dateDebut}">Date de début</td>
-                    <td th:text="${demande.dateFin}">Date de fin</td>
-                    <td>
-                        <span th:text="${demande.approuve ? 'Approuvé' : 'En attente'}"
-                              th:classappend="${demande.approuve ? 'text-success' : 'text-warning'}"></span>
-                    </td>
-                    <td>
-                        <form th:action="@{/demande/approuver/{id}(id=${demande.id})}" method="post">
-                            <button type="submit" th:disabled="${demande.approuve}" class="btn btn-success">
-                                Approuver
-                            </button>
-                            <button type="submit" th:disabled="${demande.approuve}" class="btn btn-success">
-                                Rejeter
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <table class="table mt-3 table-bordered">
+        <thead class="thead-light">
+        <tr>
+            <th>Nom</th>
+            <th>Motif</th>
+            <th>Durée</th>
+            <th>Date de début</th>
+            <th>Date de fin</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="demande : ${demandes}">
+            <td th:text="${demande.nom}">Nom</td>
+            <td th:text="${demande.motif}">Motif</td>
+            <td th:text="${demande.duree}">Durée</td>
+            <td th:text="${demande.dateDebut}">Date de début</td>
+            <td th:text="${demande.dateFin}">Date de fin</td>
+            <td>
+                <span th:text="${demande.statut}"
+                      th:classappend="${demande.statut == 'APPROUVE' ? 'text-success' : demande.statut == 'REJETE' ? 'text-danger' : 'text-warning'}">
+                </span>
+            </td>
+            <td class="d-flex gap-1">
+                <!-- Approuver -->
+                <form th:action="@{/demande/approuver/{id}(id=${demande.id})}" method="post" class="mr-1">
+                    <button type="submit" class="btn btn-success btn-sm"
+                            th:disabled="${demande.statut != 'EN_ATTENTE'}">Approuver</button>
+                </form>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+                <!-- Rejeter -->
+                <form th:action="@{/demande/rejeter/{id}(id=${demande.id})}" method="post" class="mr-1">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                            th:disabled="${demande.statut != 'EN_ATTENTE'}">Rejeter</button>
+                </form>
+
+                <!-- Supprimer -->
+                <form th:action="@{/demande/supprimer/{id}(id=${demande.id})}" method="post">
+                    <button type="submit" class="btn btn-secondary btn-sm">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

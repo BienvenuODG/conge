@@ -33,11 +33,18 @@ public class DemandeService {
         return demandeRepository.save(demande);
     }
 
-    // ✅ Approuver une demande
-    public Demande approuverDemande(Long id) {
-        Demande demande = demandeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Demande non trouvée"));
-        demande.setApprouve(true); // ✅ On approuve la demande ici
-        return demandeRepository.save(demande);
+    public void mettreAJourStatut(Long id, String statut) {
+        demandeRepository.findById(id).ifPresent(demande -> {
+            demande.setStatut(statut);
+            demandeRepository.save(demande);
+        });
     }
+    
+    public void supprimerDemande(Long id) {
+        demandeRepository.deleteById(id);
+    }
+
+    //mes demandes
+    
+    
 }

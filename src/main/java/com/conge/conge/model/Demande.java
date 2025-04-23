@@ -26,8 +26,8 @@ public class Demande {
     private LocalDate dateDebut;
     @Column(name = "dateFin")
     private LocalDate dateFin;
-    @Column(name = "approuve")
-    private boolean approuve = false;
+    @Column(name = "statut")
+    private String statut = "EN_ATTENTE";
 
     // ⚠️ Supprime ce constructeur inutile pour que Jackson fonctionne
     // public Demande(...) { ... } <-- À retirer
